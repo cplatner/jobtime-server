@@ -45,9 +45,9 @@ public class JobController
     {
         //* job object is updated with new id
         this.repository.save(job);
-        JobResource js = new JobResource(job);
-        js.add(linkTo(methodOn(JobController.class).createUser(job)).withSelfRel());
+        JobResource jobResource = new JobResource(job.getId(), job.getName());
+        jobResource.add(linkTo(methodOn(JobController.class).createUser(job)).withSelfRel());
 
-        return new ResponseEntity<>(js, HttpStatus.CREATED);
+        return new ResponseEntity<>(jobResource, HttpStatus.CREATED);
     }
 }

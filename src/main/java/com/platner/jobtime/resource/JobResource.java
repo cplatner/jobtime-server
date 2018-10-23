@@ -1,35 +1,28 @@
 package com.platner.jobtime.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.platner.jobtime.model.Job;
 import org.springframework.hateoas.ResourceSupport;
 
 public class JobResource extends ResourceSupport
 {
-    private  String content;
-
-    @JsonIgnore
-    private Job job;
+    private Long jobId;
+    private String jobName;
 
     @JsonCreator
-    public JobResource(@JsonProperty("job") Job job)
+    public JobResource(@JsonProperty("jobId") Long jobId, @JsonProperty("jobName") String jobName)
     {
-        this.job = job;
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            this.content = mapper.writeValueAsString(job);
-        } catch (JsonProcessingException e) {
-            //*
-        }
+        this.jobId = jobId;
+        this.jobName = jobName;
     }
 
-    public String getContent()
+    public Long getJobId()
     {
-        return content;
+        return jobId;
+    }
+
+    public String getJobName()
+    {
+        return jobName;
     }
 }
