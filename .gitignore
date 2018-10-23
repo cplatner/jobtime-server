@@ -336,3 +336,4 @@ ASALocalRun/
 # Build cache directory
 .gradle/
 out/
+build/
