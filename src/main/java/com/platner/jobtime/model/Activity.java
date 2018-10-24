@@ -13,6 +13,11 @@ public class Activity
     @Column(name = "id", updatable = false, unique = true, nullable = false)
     private Long id;
 
+    public Long getId()
+    {
+        return id;
+    }
+
     //@Column(name = "name", nullable = false, length = 255)
     private String name;
 

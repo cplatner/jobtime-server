@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 
 
 @Entity
+@Table(name="timestamp")
 public class ActivityTimestamp
 {
     protected ActivityTimestamp()
@@ -27,6 +28,11 @@ public class ActivityTimestamp
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // @Column(name = "id", updatable = false, nullable = false)
     private Long id;
+
+    public Long getId()
+    {
+        return id;
+    }
 
     private LocalDateTime start;
 
