@@ -6,4 +6,4 @@ This new version will support mobile apps too.
 
 This is the C# UI
 
-![JobTime UI](./jobtime-in-c#.png)
+![JobTime UI](https://github.com/cplatner/jobtime-server/raw/master/jobtime-in-c%23.png)
