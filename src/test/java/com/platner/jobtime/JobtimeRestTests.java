@@ -43,11 +43,11 @@ public class JobtimeRestTests
     public void jobController_findAll_isOk()
     {
         Job first = new Job("First");
-        this.repo.save(first);
+        repo.save(first);
         Job second = new Job("Second");
-        this.repo.save(second);
+        repo.save(second);
         Job third = new Job("Third");
-        this.repo.save(third);
+        repo.save(third);
 
         Iterable<Job> response = restTemplate.getForObject("http://localhost:8080/api/jobs", Iterable.class);
 
@@ -83,18 +83,16 @@ public class JobtimeRestTests
             //* Verify the repository has the new object
             Optional<Job> jobFromRepo = repo.findById(id);
             Assert.assertEquals("Job 1", jobFromRepo.get().getName());
-            // repo.delete(jobFromRepo.get());
         } finally {
-            this.repo.deleteById(id);
+            repo.deleteById(id);
         }
     }
-
 
     @Test
     public void jobController_delete_isOk()
     {
         Job first = new Job("To Delete");
-        this.repo.save(first);
+        repo.save(first);
         Iterable<Job> response = restTemplate.getForObject("http://localhost:8080/api/jobs", Iterable.class);
         int itemsInRepo = Iterables.size(response);
         Assert.assertTrue(itemsInRepo >= 1);
@@ -107,5 +105,30 @@ public class JobtimeRestTests
 
         Job deletedJob = restTemplate.getForObject(String.format("http://localhost:8080/api/job/%d", first.getId()), Job.class);
         Assert.assertNull(deletedJob);
+    }
+
+    @Test
+    public void jobRepo_generalTest_isOk()
+    {
+        repo.deleteAll();
+
+        repo.save(new Job("Jack"));
+        repo.save(new Job("Chloe"));
+        repo.save(new Job("Kim"));
+        repo.save(new Job("David"));
+        repo.save(new Job("Michelle"));
+
+        Iterable<Job> jobs = repo.findAll();
+        Assert.assertEquals(5, Iterables.size(jobs));
+
+        Optional<Job> maybeJob = repo.findById(3L);
+        Assert.assertNotNull(maybeJob.get());
+        Assert.assertEquals("Kim", maybeJob.get().getName());
+
+        jobs = repo.findByName("Chloe");
+        Assert.assertEquals(1, Iterables.size(jobs));
+        Job job = jobs.iterator().next();
+        Assert.assertNotNull(job);
+        Assert.assertEquals("Chloe", job.getName());
     }
 }
