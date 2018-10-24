@@ -35,12 +35,12 @@ public class JobtimeRestTests
     private TestRestTemplate restTemplate = new TestRestTemplate();
 
     @Test
-    public void jobController_findJobById_isOk() throws JsonProcessingException
+    public void jobController_findJobById_isOk()
     {
     }
 
     @Test
-    public void jobController_findAll_isOk() throws JsonProcessingException
+    public void jobController_findAll_isOk()
     {
         Job first = new Job("First");
         this.repo.save(first);
@@ -73,7 +73,7 @@ public class JobtimeRestTests
         try {
             JobResource response = restTemplate.postForObject("http://localhost:8080/api/job", bodyAndHeaders, JobResource.class, Collections.EMPTY_MAP);
 
-            id = this.repo.count();
+            id = response.getJobId();
 
             //* Verify call works
             Assert.assertNotNull(response);
@@ -85,7 +85,27 @@ public class JobtimeRestTests
             Assert.assertEquals("Job 1", jobFromRepo.get().getName());
             // repo.delete(jobFromRepo.get());
         } finally {
-            repo.deleteById(id);
+            this.repo.deleteById(id);
         }
+    }
+
+
+    @Test
+    public void jobController_delete_isOk()
+    {
+        Job first = new Job("To Delete");
+        this.repo.save(first);
+        Iterable<Job> response = restTemplate.getForObject("http://localhost:8080/api/jobs", Iterable.class);
+        int itemsInRepo = Iterables.size(response);
+        Assert.assertTrue(itemsInRepo >= 1);
+        String format = String.format("http://localhost:8080/api/job/%d", first.getId());
+        restTemplate.delete(format);
+
+        response = restTemplate.getForObject("http://localhost:8080/api/jobs", Iterable.class);
+
+        Assert.assertTrue(Iterables.size(response) < itemsInRepo);
+
+        Job deletedJob = restTemplate.getForObject(String.format("http://localhost:8080/api/job/%d", first.getId()), Job.class);
+        Assert.assertNull(deletedJob);
     }
 }
